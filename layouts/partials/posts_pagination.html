@@ -1,4 +1,30 @@
-{{ if or .NextInSection .PrevInSection }}
+
+{{ $re := $.File.BaseFileName }} {{ $backlinks := slice }} {{ range where
+    .Site.RegularPages "Type" "pages" }} {{ if and (findRE $re .RawContent) (not (eq
+    $re .File.BaseFileName)) }} {{ $backlinks = $backlinks | append . }} {{ end }}
+    {{ end }} {{ if gt (len $backlinks) 0 }}
+    <div class="pagination">
+        <div class="pagination__title">
+            <span class="pagination__title-h">Backlinks</span>
+            <hr />
+        </div>
+    <aside>
+      
+      <div class="backlinks">
+        <ul>
+          {{ range $backlinks }}
+          <span class="button next">
+          <a href="{{ .RelPermalink }}"><span class="button__text">{{ .Title }}  </span>
+            <span class="button__icon">→</span></a>
+          </span>
+          <br>
+          {{ end }}
+        </ul>
+      </div>
+    </aside>
+</div>
+    {{ else }}
+    {{ if or .NextInSection .PrevInSection }}
 <div class="pagination">
     <div class="pagination__title">
         <span class="pagination__title-h">{{ $.Site.Params.ReadOtherPosts }}</span>
@@ -24,3 +50,23 @@
     </div>
 </div>
 {{ end }}
+    {{ end }}
+    
+    <!-- <aside class="related">
+      {{ $related := .Site.RegularPages.Related . | complement $backlinks | first 3
+      -}} {{ with $related -}}
+      <h3>slightly related</h3>
+      <ul>
+        {{ range . -}}
+        <li class="capitalize"><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{ end -}}
+      </ul>
+      {{ end -}}
+    </aside> -->
+
+
+
+
+    <!-- button__text -->
+
+    
